@@ -13,11 +13,46 @@ object Main {
     @JvmStatic
     fun main(args: Array<String>) {
         Debug.showDebug = false
-        val length = 9
+        runUserGame(4)
+    }
+
+    private fun runUserGame(length: Int) {
+        val scanner = Scanner(System.`in`)
+
+        val baseballGame = BaseballGame(length)
+
+        while (!baseballGame.isClear) {
+            if (Debug.showDebug) {
+                printPossibleCases(baseballGame)
+            }
+
+            val nums = baseballGame.bestQuestion
+            println(nums)
+            print("Enter strike: ")
+            val s = scanner.nextInt()
+            print("Enter ball: ")
+            val b = scanner.nextInt()
+
+            baseballGame.addRecord(Record(nums, s, b))
+        }
+        println("Answer: ${baseballGame.possibleCases[0]}")
+    }
+
+    private fun printPossibleCases(baseballGame: BaseballGame) {
+        for (case in baseballGame.possibleCases) {
+            for (n in case) {
+                System.out.printf("%d ", n)
+            }
+            println("")
+        }
+    }
+
+    private fun runTestGame(length: Int, loop: Int) {
         val result = ArrayList<Int>()
-        for (i in 1..50) {
-            print("Run #$i ")
-            result.add(runGame(length))
+        for (i in 0 until loop) {
+            print("Run #${i + 1} ")
+            val nums = BaseballGame.NUMBERS.shuffled().subList(0, length)
+            result.add(test(nums))
             println("count: ${result.last()}")
         }
         result.sort()
@@ -26,12 +61,13 @@ object Main {
         println("avg: ${result.average()}")
     }
 
-    private fun runGame(length: Int): Int {
-        val baseballGame = BaseballGame(length)
-        val nums = BaseballGame.NUMBERS.shuffled().subList(0, length)
+    private fun test(nums: List<Int>): Int {
+        val baseballGame = BaseballGame(nums.size)
         val host = GameHost(nums)
+
         if (Debug.showDebug)
             println("answer: $nums")
+
         var count = 0
         while (!baseballGame.isClear) {
             val question = baseballGame.bestQuestion
@@ -43,40 +79,5 @@ object Main {
         }
         assert(baseballGame.possibleCases[0] == nums)
         return count
-    }
-
-    private fun userInputMain() {
-        Debug.showDebug = true
-        val scanner = Scanner(System.`in`)
-
-        val baseballGame = BaseballGame(3)
-
-        baseballGame.addRecord(Record(listOf(1, 2, 3), 1, 0))
-        baseballGame.addRecord(Record(listOf(4, 5, 6), 0, 1))
-        baseballGame.addRecord(Record(listOf(7, 8, 9), 0, 1))
-
-        while (true) {
-            for (case in baseballGame.possibleCases) {
-                for (n in case) {
-                    System.out.printf("%d ", n)
-                }
-                println("")
-            }
-
-            print("Enter number: ")
-            val num = scanner.nextInt()
-            print("Enter strike: ")
-            val s = scanner.nextInt()
-            print("Enter ball: ")
-            val b = scanner.nextInt()
-
-            val nums = ArrayList<Int>(3)
-            nums.add(num / 10 / 10 % 10)
-            nums.add(num / 10 % 10)
-            nums.add(num % 10)
-
-            baseballGame.addRecord(Record(nums, s, b))
-            baseballGame.bestQuestion
-        }
     }
 }
