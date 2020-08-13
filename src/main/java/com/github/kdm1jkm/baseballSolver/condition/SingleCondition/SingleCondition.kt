@@ -5,6 +5,6 @@ import com.github.kdm1jkm.baseballSolver.condition.ConditionSort
 interface SingleCondition : Cloneable {
     val num: Int
     val pos: Int
-    fun isTrue(nums: IntArray): Boolean
+    fun isTrue(nums: List<Int>): Boolean
     val sort: ConditionSort
 }

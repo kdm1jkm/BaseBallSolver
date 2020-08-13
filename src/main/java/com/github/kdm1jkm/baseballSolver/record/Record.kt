@@ -5,7 +5,7 @@ import com.github.kdm1jkm.baseballSolver.condition.ConditionSort
 import com.github.kdm1jkm.baseballSolver.condition.ConditionSort.Companion.getList
 import com.github.kdm1jkm.baseballSolver.util.Util
 
-class Record(val nums: IntArray, val strike: Int, val ball: Int) {
+class Record(val nums: List<Int>, val strike: Int, val ball: Int) {
     val out: Int = nums.size - strike - ball
     val data: MutableSet<Condition> = HashSet()
 
@@ -13,9 +13,9 @@ class Record(val nums: IntArray, val strike: Int, val ball: Int) {
         makeConditions(nums, strike, ball, out)
     }
 
-    fun isTrue(nums: IntArray): Boolean = data.any { it.isTrue(nums) }
+    fun isTrue(nums: List<Int>): Boolean = data.any { it.isTrue(nums) }
 
-    private fun makeConditions(nums: IntArray, strike: Int, ball: Int, out: Int) {
+    private fun makeConditions(nums: List<Int>, strike: Int, ball: Int, out: Int) {
         val conditionSortPermutations: List<List<ConditionSort>> =
                 Util.getPermutations(getList(mapOf(
                         Pair(ConditionSort.Strike, strike),

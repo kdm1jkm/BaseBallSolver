@@ -7,7 +7,7 @@ class Condition {
 
     fun addCondition(condition: SingleCondition) = data.add(condition)
 
-    fun isTrue(nums: IntArray): Boolean = data.all { it.isTrue(nums) }
+    fun isTrue(nums: List<Int>): Boolean = data.all { it.isTrue(nums) }
 
     val conditions: Array<SingleCondition>
         get() = data.toTypedArray()
