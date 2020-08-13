@@ -1,9 +1,9 @@
 package com.github.kdm1jkm.baseballSolver
 
+import com.github.kdm1jkm.baseballSolver.condition.ConditionSort.*
 import com.github.kdm1jkm.baseballSolver.debug.Debug
 import com.github.kdm1jkm.baseballSolver.record.Record
 import com.github.kdm1jkm.baseballSolver.util.Util
-import kotlin.math.abs
 
 class BaseballGame(val length: Int) {
     companion object {
@@ -23,57 +23,56 @@ class BaseballGame(val length: Int) {
     }
 
     fun getBestQuestion() {
-        // 남은 경우의 수에 있는 숫자들의 빈도수 세기
-        val possibleCaseFrequency = countFrequency()
+        val weightFrequency = weighFrequency()
 
-        // 빈도수가 전체 숫자의 50%에 가까울수록 작은 숫자가 나옴
-        possibleCaseFrequency.forEach { (t, u) ->
-            val new = abs(u * 100 / possibleCases.size - 50)
-            possibleCaseFrequency[t] = new
-            if (Debug.showDebug)
-                println("$t: $u -> $new")
-        }
-        val sorted = possibleCaseFrequency.toList().sortedWith(compareBy { it.second })
+        val sorted = weightFrequency.toList().sortedWith(compareByDescending { it.second })
         val frequentNums = ArrayList<Int>(length)
         for (i in 0 until length) {
             frequentNums.add(sorted[i].first)
         }
 
-        // 빈도수가 50%에 가까운 length개의 숫자들의 위치 빈도수를 셈
-        val positionFrequency = HashMap<Int, HashMap<Int, Int>>()
-        frequentNums.forEach {
-            positionFrequency[it] = HashMap()
-            for (i in 0 until length) {
-                positionFrequency[it]!![i] = 0
-            }
-        }
-        for (possibleCase in possibleCases) {
-            for ((i, value) in possibleCase.withIndex()) {
-                if (frequentNums.contains(value)) {
-                    positionFrequency[value]!![i] = positionFrequency[value]!![i]!! + 1
-                }
-            }
-        }
-
-        if (Debug.showDebug) {
-            println("frequentNums = $frequentNums")
-            println("positionFrequency = $positionFrequency")
-        }
+        val frequentNumPermutation = Util.getPermutations(frequentNums, length)
+        val best =
+                frequentNumPermutation.map {
+                    if (Debug.showDebug) {
+                        println("it = ${it}")
+                    }
+                    var weight = 0
+                    records.forEach { record ->
+                        val score = Util.getBaseballGameScore(record.nums.asList(), it)
+                        if (score[Out]!! == 0) return@forEach
+                        weight += score[Strike]!! - score[Ball]!!
+//                        weight += record.strike - record.ball
+                        if (Debug.showDebug) {
+                            println("weight changed weight: $weight | s: ${score[Strike]}, b: ${score[Ball]} " +
+                                    "/ nums: ${record.nums.contentToString()}")
+//                            println("weight changed weight: $weight / s: ${record.strike}, b: ${record.ball} / nums: ${record.nums}")
+                        }
+                    }
+                    if (Debug.showDebug) {
+                        println("weight = ${weight}")
+                    }
+                    Pair(it, weight)
+                }.sortedWith(compareByDescending { it.second })[0].first
+        println("best = ${best}")
     }
 
-    private fun weighFrequency(): HashMap<Int, Int> {
-        val result = HashMap<Int, Int>()
+    private fun weighFrequency(): Map<Int, Double> {
+        val result = HashMap<Int, Pair<Int, Int>>()
 
         for (num in NUMBERS) {
-            result[num] = 0
+            result[num] = Pair(0, 0)
         }
         for (record in records) {
             val weight = record.ball + record.strike
             for (num in record.nums) {
-                result[num] = result[num]!! + weight
+                result[num] = Pair(result[num]!!.first + weight, result[num]!!.second + 1)
             }
         }
-        return result
+
+        return result.map {
+            Pair(it.key, it.value.first.toDouble() / it.value.second.toDouble())
+        }.toMap()
     }
 
     private fun countFrequency(): HashMap<Int, Int> {

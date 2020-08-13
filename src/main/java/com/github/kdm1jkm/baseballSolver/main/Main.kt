@@ -13,10 +13,11 @@ object Main {
 
         val baseballGame = BaseballGame(3)
 
-        baseballGame.addRecord(Record(intArrayOf(1, 2, 3), 1, 1))
-        baseballGame.addRecord(Record(intArrayOf(4, 5, 6), 0, 0))
-        baseballGame.addRecord(Record(intArrayOf(7, 8, 9), 0, 1))
-        baseballGame.getBestQuestion()
+//        baseballGame.addRecord(Record(intArrayOf(1, 2, 3), 1, 1))
+//        baseballGame.addRecord(Record(intArrayOf(4, 5, 6), 0, 0))
+//        baseballGame.addRecord(Record(intArrayOf(7, 8, 9), 0, 1))
+//        baseballGame.addRecord(Record(intArrayOf(3, 8, 2), 0, 2))
+//        baseballGame.getBestQuestion()
 
         while (true) {
             for (case in baseballGame.possibleCases) {

@@ -1,5 +1,9 @@
 package com.github.kdm1jkm.baseballSolver.util
 
+import com.github.kdm1jkm.baseballSolver.condition.ConditionSort
+import com.github.kdm1jkm.baseballSolver.condition.ConditionSort.*
+import com.github.kdm1jkm.baseballSolver.debug.Debug
+
 object Util {
     @JvmStatic
     fun <T> getPermutations(elements: List<T>, count: Int): List<List<T>> {
@@ -30,6 +34,28 @@ object Util {
                 arr.add(elements[i])
                 arr.addAll(backPermutation)
                 result.add(arr)
+            }
+        }
+        return result
+    }
+
+    fun getBaseballGameScore(rightAnswer: List<Int>, userAnswer: List<Int>): MutableMap<ConditionSort, Int> {
+        val result = mutableMapOf(
+                Strike to 0,
+                Ball to 0,
+                Out to 0
+        )
+
+        userAnswer.forEachIndexed { i, num ->
+            when {
+                rightAnswer[i] == num ->
+                    result[Strike] = result[Strike]!! + 1
+
+                rightAnswer.contains(num) ->
+                    result[Ball] = result[Ball]!! + 1
+
+                else ->
+                    result[Out] = result[Out]!! + 1
             }
         }
         return result
