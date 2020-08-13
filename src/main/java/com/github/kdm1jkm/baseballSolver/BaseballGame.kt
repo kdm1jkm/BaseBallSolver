@@ -1,5 +1,6 @@
 package com.github.kdm1jkm.baseballSolver
 
+import com.github.kdm1jkm.baseballSolver.exception.NoSuchPossibilityException
 import com.github.kdm1jkm.baseballSolver.record.Record
 import com.github.kdm1jkm.baseballSolver.util.Util
 
@@ -31,5 +32,6 @@ class BaseballGame(val length: Int) {
         possibleCases = possibleCases.filter { element ->
             record.isTrue(element)
         }
+        if (possibleCases.isEmpty()) throw NoSuchPossibilityException()
     }
 }

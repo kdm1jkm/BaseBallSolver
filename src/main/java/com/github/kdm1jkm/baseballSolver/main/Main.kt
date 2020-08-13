@@ -12,7 +12,7 @@ import kotlin.collections.ArrayList
 object Main {
     @JvmStatic
     fun main(args: Array<String>) {
-        Debug.showDebug = false
+        Debug.showDebug = true
         runUserGame(4)
     }
 
