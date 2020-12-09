@@ -6,7 +6,7 @@ import com.github.kdm1jkm.baseballSolver.util.Util
 
 class BaseballGame(val length: Int) {
     companion object {
-        val NUMBERS = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9)
+        var NUMBERS = listOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
     }
 
     private val earlyNums = NUMBERS.shuffled().chunked(length).filter { it.size == length }
