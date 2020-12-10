@@ -34,15 +34,21 @@ object Main {
         )
         options.addOption(Option.builder("z")
                 .longOpt("zero")
-                .argName("Include zero")
+                .argName("zero")
+                .desc("Include number \"0\"")
+                .build()
+        )
+        options.addOption(Option.builder("d")
+                .longOpt("debug")
+                .argName("debug")
+                .desc("Show process")
                 .build()
         )
         val formatter = HelpFormatter()
         try {
             runOnce(options, args)
-        } catch (e: Exception) {
+        } catch (e: MissingOptionException) {
             println(e.message)
-            println(e.stackTrace)
             formatter.printHelp("java -jar BaseBallSolver.jar", options)
         }
     }
@@ -59,6 +65,8 @@ object Main {
         } else {
             BaseballGame.NUMBERS = listOf(1, 2, 3, 4, 5, 6, 7, 8, 9)
         }
+
+        Debug.showDebug = commandLine.hasOption("d")
 
         if (commandLine.hasOption("u")) {
             runUserGame(num)

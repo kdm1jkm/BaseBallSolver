@@ -1,1 +1,0 @@
-Main-Class: com.github.kdm1jkm.baseballSolver.main.Main
