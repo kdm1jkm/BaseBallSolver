@@ -5,6 +5,7 @@ import com.github.kdm1jkm.baseballSolver.GameHost
 import com.github.kdm1jkm.baseballSolver.condition.ConditionSort.Ball
 import com.github.kdm1jkm.baseballSolver.condition.ConditionSort.Strike
 import com.github.kdm1jkm.baseballSolver.debug.Debug
+import com.github.kdm1jkm.baseballSolver.exception.NoSuchPossibilityException
 import com.github.kdm1jkm.baseballSolver.record.Record
 import org.apache.commons.cli.*
 import java.util.*
@@ -50,6 +51,9 @@ object Main {
         } catch (e: MissingOptionException) {
             println(e.message)
             formatter.printHelp("java -jar BaseBallSolver.jar", options)
+        }
+        catch(e: NoSuchPossibilityException){
+            println("Impossible case!")
         }
     }
 
